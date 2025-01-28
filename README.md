@@ -1,5 +1,11 @@
 # Web_Talent_Scout
 
 ## Enlace a el repositorio asegurado
-[Enlace repositorio asegurado](https://github.com/IsraelValderrama/Web_Talent_Scout_Tech_Seguro)
+[Repositorio asegurado](https://github.com/IsraelValderrama/Web_Talent_Scout_Tech_Seguro)
 
+## Enlace a Informe Técinco
+
+[Informe técnico](https://github.com/IsraelValderrama/Web_Talent_Scout/blob/main/Informe%20t%C3%A9cnico.md)
+
+
+## Realizado por Israel Valderrama García
