@@ -7,5 +7,8 @@
 
 [Informe técnico](https://github.com/IsraelValderrama/Web_Talent_Scout/blob/main/Informe%20t%C3%A9cnico.md)
 
+## Enlace a Informe de pentesting
+
+[Infome de pentesting](https://github.com/IsraelValderrama/Web_Talent_Scout/blob/main/Informe%20de%20pentesting.md)
 
 ## Realizado por Israel Valderrama García
