@@ -11,6 +11,8 @@ a) Dad un ejemplo de combinación de usuario y contraseña que provoque un error
 |           **La consulta SQL que se ejecuta es**           | **```SELECT userId, password FROM users WHERE username = """```** |
 |  **Campos del formulario web utilizado en la consulta**   |                           **username**                            |
 | **Campos del formulario web no utilizado en la consulta** |                           **password**                            |
+
+
 b) Gracias a la SQL Injection del apartado anterior, sabemos que este formulario es vulnerable y conocemos el nombre de los campos de la tabla “users”. Para tratar de impersonar a un usuario, nos hemos descargado un diccionario que contiene algunas de las contraseñas más utilizadas (se listan a continuación):
 - password
 - 123456
@@ -25,12 +27,15 @@ Dad un ataque que, utilizando este diccionario, nos permita impersonar un usuari
 | --------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | **Campo de usuario con el que el ataque ha tenido éxito** |                                                                                **luis**                                                                                 |
 | **Campo de contraseña con que el ataque ha tenido éxito** |                                                                                **1234**                                                                                 |
+
 c) Si vais a `private/auth.php`, veréis que en la función `areUserAndPasswordValid`, se utiliza `SQLite3::escapeString()`, pero, aun así, el formulario es vulnerable a SQL Injections, explicad cuál es el error de programación de esta función y como lo podéis corregir.
 
 |          **Explicación del error**           |                               **Es debido a que ese método se utiliza para escapar caracteres especiales en cadenas pero no da protección contra SQLi**                                |
 | :------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | **Solución: Cambiar la línea con el código** |                                      ```$query = SQLite3::escapeString('SELECT userId, password FROM users WHERE username = "' . $user . '"');```                                      |
 |          **por la siguiente línea**          | ```$query = $db->prepare('SELECT userId, password FROM users WHERE username = :username');<br>$query->bindValue(':username', $user, SQLITE3_TEXT);<br>$result = $stmt**->execute();``` |
+
+
 d) Si habéis tenido éxito con el _apartado b)_, os habéis autenticado utilizando el usuario `luis` (si no habéis tenido éxito, podéis utilizar la contraseña _1234_ para realizar este apartado). Con el objetivo de mejorar la imagen de la jugadora _Candela Pacheco_, le queremos escribir un buen puñado de comentarios positivos, pero no los queremos hacer todos con la misma cuenta de usuario.
 
 Para hacer esto, en primer lugar habéis hecho un ataque de fuerza bruta sobre el directorio del servidor web (por ejemplo, probando nombres de archivo) y habéis encontrado el archivo `add\_comment.php~`. Estos archivos seguramente se han creado como copia de seguridad al modificar el archivo “.php” original directamente al servidor. En general, los servidores web no interpretan (ejecuten) los archivos `.php~` sino que los muestran como archivos de texto sin interpretar.
@@ -51,16 +56,22 @@ a) Para ver si hay un problema de XSS, crearemos un comentario que muestre un al
 | Introduzco el mensaje         | `<script>alert("XSS")</script>`<br> |
 | ----------------------------- | ----------------------------------- |
 | En el formulario de la página | show_comments.php                   |
+
+
 b) Por qué dice `&amp;` cuando miráis un link (como el que aparece a la portada de esta aplicación pidiendo que realices un donativo) con parámetros GET dentro de código html si en realidad el link es sólo con "&" ?
 
 | Explicación | En HTML, &amp; reemplaza & para evitar que el navegador interprete los parámetros GET como entidades HTML inválidas, manteniendo la URL correcta. |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+
+
 c) Explicad cuál es el problema de `show\_comments.php`, y cómo lo arreglaríais. Para resolver este apartado, podéis mirar el código fuente de esta página.
 
 | ¿Cuál es el problema?                    | Se utiliza directamente el valor de `$_GET['id']` y datos de la base de datos en el HTML sin ninguna sanitización o escape, lo que podría permitir un ataque XSS si los datos contienen código malicioso. |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Sustituyo el código de la/las líneas** | `echo "<div><h4> ". $row['username'] ."</h4><p>commented: " .$row['body'] . "</p></div>";`                                                                                                                |
 | **por el siguiente código**              | `echo "<div><h4>" . htmlspecialchars($row['username'],ENT_QUOTES, 'UTF-8') . "</h4><p>commented: " . htmlspecialchars($row['body'], ENT_QUOTES, 'UTF-8') . "</p><br><br>       </div>";`                  |
+
+
 d) Descubrid si hay alguna otra página que esté afectada por esta misma vulnerabilidad. En caso positivo, explicad cómo lo habéis descubierto.
 
 | Otras páginas afectadas      | list_players, buscador.php                                                                                                                                                        |
